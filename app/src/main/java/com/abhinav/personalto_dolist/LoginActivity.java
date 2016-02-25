@@ -9,7 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.Profile;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
+import com.facebook.login.widget.ProfilePictureView;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -17,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Set;
 
 /**
  * Created by abhinavsharma on 25-02-2016.
@@ -28,11 +37,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private GoogleSignInOptions googleSignInOptions;
     private GoogleApiClient googleApiClient;
     private SignInButton signInButton;
+    private LoginButton loginButton;
+    private CallbackManager callbackManager;
     private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.login_activity);
         initialize();
     }
@@ -42,7 +54,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).requestEmail().build();
         googleApiClient = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this,this).addApi(Auth.GOOGLE_SIGN_IN_API,googleSignInOptions).build();
+        callbackManager = CallbackManager.Factory.create();
+        loginButton = (LoginButton) findViewById(R.id.login_button);
+        loginButton.setReadPermissions("public_profile");
         signInButton.setOnClickListener(this);
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG,"Facebook token "+loginResult.getAccessToken());
+                Set<String> set = loginResult.getRecentlyGrantedPermissions();
+                Log.d(TAG,""+set.toString());
+                Profile fbProfile = Profile.getCurrentProfile();
+                Toast.makeText(LoginActivity.this, "Welcome, "+fbProfile.getFirstName(), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+                finish();
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG,"Facebook user cancelled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.e(TAG,"Facebook login error:"+error.getMessage());
+            }
+        });
     }
 
     @Override
@@ -72,6 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleSignInResult(result);
         }
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void handleSignInResult(GoogleSignInResult result){
