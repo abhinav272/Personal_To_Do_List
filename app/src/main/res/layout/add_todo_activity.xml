@@ -10,63 +10,115 @@
     <EditText
         android:id="@+id/item_name"
         android:layout_below="@+id/toolbar"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:paddingLeft="10dp"
+        android:hint="Remind me to.."
+        android:textColorHint="@color/colorWhite"
+        android:gravity="center_vertical"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize" />
+
+    <ImageView
+        android:id="@+id/item_date_drawable"
+        android:src="@drawable/icon_date"
+        android:layout_below="@+id/item_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <TextView
+        android:id="@+id/item_date"
+        android:layout_below="@+id/item_name"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/item_time_drawable"
+        android:background="@android:color/transparent"
+        android:maxHeight="24dp"
+        android:textSize="18sp"
+        android:text="Pick Date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/item_time_drawable"
+        android:src="@drawable/icon_schedule"
+        android:layout_below="@+id/item_date"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <TextView
+        android:id="@+id/item_time"
+        android:layout_below="@+id/item_date"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:hint="Remind me about"
-        android:drawableLeft="@mipmap/ic_launcher"
-        android:textSize="24sp"
+        android:layout_toRightOf="@+id/item_time_drawable"
         android:background="@android:color/transparent"
+        android:text="Pick Time"
+        android:textSize="18sp"
+        android:maxHeight="24dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <EditText
-        android:id="@+id/item_time"
-        android:layout_below="@+id/item_name"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
-        android:textSize="24sp"
-        android:hint="Remind me at"
-        android:drawableLeft="@drawable/icon_schedule"
-        android:background="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <EditText
-        android:id="@+id/item_location"
+    <ImageView
+        android:id="@+id/item_location_drawable"
+        android:src="@drawable/icon_location"
         android:layout_below="@+id/item_time"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:textSize="24sp"
-        android:hint="Pick Location"
-        android:drawableLeft="@drawable/icon_location"
-        android:background="@android:color/transparent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_marginTop="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
 
     <TextView
-        android:id="@+id/item_notification_tv"
-        android:layout_below="@+id/item_location"
-        android:layout_marginTop="30dp"
+        android:id="@+id/item_location"
+        android:layout_below="@+id/item_time"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginLeft="20dp"
-        android:textSize="24sp"
+        android:layout_toRightOf="@+id/item_time_drawable"
+        android:background="@android:color/transparent"
+        android:text="Pick Location"
+        android:textSize="18sp"
+        android:maxHeight="24dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/item_notification_drawable"
+        android:src="@drawable/icon_notifications"
+        android:layout_below="@+id/item_location"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_width="24dp"
+        android:layout_height="24dp" />
+
+    <TextView
+        android:id="@+id/item_notification_sound"
+        android:layout_below="@+id/item_location"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@+id/item_time_drawable"
+        android:background="@android:color/transparent"
         android:hint="Notification"
-        android:drawableLeft="@drawable/icon_notifications"
-        android:gravity="center"
-        android:maxLength="18"
+        android:textSize="18sp"
+        android:maxHeight="24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <Switch
         android:id="@+id/item_notification"
-        android:layout_below="@+id/item_location"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginLeft="20dp"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/item_location"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:textOff="Notification Off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

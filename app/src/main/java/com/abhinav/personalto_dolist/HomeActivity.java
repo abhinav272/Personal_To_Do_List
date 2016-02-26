@@ -1,5 +1,6 @@
 package com.abhinav.personalto_dolist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,7 +34,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.fab:
-
+                startActivity(new Intent(HomeActivity.this,AddToDo.class));
                 break;
         }
     }
