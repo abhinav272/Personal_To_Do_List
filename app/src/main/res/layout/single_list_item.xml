@@ -3,17 +3,101 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.CardView
-        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/story"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorBackground"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        card_view:cardBackgroundColor="@color/colorBackground"
         card_view:cardCornerRadius="2dp"
         card_view:contentPadding="10dp">
+
+        <RelativeLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/item_date_drawable"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_below="@+id/item_name"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/icon_date" />
+
+            <TextView
+                android:id="@+id/item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_name"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_date_drawable" />
+
+            <ImageView
+                android:id="@+id/item_time_drawable"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_below="@+id/item_name"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_date"
+                android:src="@drawable/icon_schedule" />
+
+            <TextView
+                android:id="@+id/item_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_name"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_toRightOf="@+id/item_time_drawable" />
+
+            <ImageView
+                android:id="@+id/item_location_drawable"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_below="@id/item_date_drawable"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/icon_location" />
+
+            <TextView
+                android:id="@+id/item_location"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_date_drawable"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:maxLength="35"
+                android:layout_toRightOf="@+id/item_location_drawable" />
+
+            <ImageView
+                android:id="@+id/item_notification_drawable"
+                android:layout_width="17dp"
+                android:layout_height="17dp"
+                android:layout_below="@+id/item_location_drawable"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/icon_notifications" />
+
+            <TextView
+                android:id="@+id/item_notification_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_location_drawable"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                android:maxLength="35"
+                android:layout_toRightOf="@+id/item_notification_drawable" />
+        </RelativeLayout>
+
 
     </android.support.v7.widget.CardView>
 

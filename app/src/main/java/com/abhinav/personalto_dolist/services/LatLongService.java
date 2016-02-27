@@ -1,22 +1,17 @@
-package com.abhinav.personalto_dolist;
+package com.abhinav.personalto_dolist.Services;
 
 import android.app.Service;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
-import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.os.ResultReceiver;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
@@ -117,11 +112,11 @@ public class LatLongService extends Service implements GoogleApiClient.Connectio
     private void deliverAddressToActivity(int resultCode, Address mAddress) {
         String addrs = "";
         Bundle bundle = new Bundle();
-        if (resultCode == STATUS_PASS) {
+        if (resultCode == STATUS_PASS && mAddress!=null) {
             addrs = mAddress.getAddressLine(0)
-                    + mAddress.getAddressLine(1)
-                    + mAddress.getAddressLine(2)
-                    + mAddress.getAddressLine(3);
+                    + " " + mAddress.getAddressLine(1)
+                    + " " + mAddress.getAddressLine(2)
+                    + " " + mAddress.getAddressLine(3);
             bundle.putString("address", addrs);
         }
         mResultReceiver.send(resultCode, bundle);
