@@ -42,7 +42,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver{
                 soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
             }
             Intent openApp = new Intent(context,HomeActivity.class);
-            openApp.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            openApp.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(openApp);
             ringtone = RingtoneManager.getRingtone(context,soundUri);
             ringtone.play();
@@ -51,7 +51,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver{
             Log.d(TAG,"Broadcast received for notification");
             nMgr = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
             notification = intent.getParcelableExtra("Notification");
-            nMgr.notify(1,notification);
+            nMgr.notify(3,notification);
         }
 
 

@@ -1,6 +1,7 @@
 package com.abhinav.personalto_dolist.Services;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
@@ -29,6 +30,7 @@ public class ToDoDatabaseService extends Service {
     private ToDoItem item;
     private ToDoDBHelper mToDoDBHelper;
     private static final String TAG = "ToDoDatabaseService";
+    private NotificationManager notificationManager;
 
 
     @Nullable
@@ -40,6 +42,8 @@ public class ToDoDatabaseService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        Log.d("test",intent.toString());
+
         if(intent.getStringExtra("query_type").equalsIgnoreCase("ADD")){
             mToDoDBHelper = ToDoDBHelper.getInstance(getApplicationContext());
             item = intent.getParcelableExtra("item");
@@ -50,11 +54,15 @@ public class ToDoDatabaseService extends Service {
             sendBroadcast(sendRowId);
             Toast.makeText(getApplicationContext(),"ToDo item added successfully!!",Toast.LENGTH_SHORT).show();
         }
-        else if(intent.getStringExtra("query_type").equalsIgnoreCase("DISMISS")){
+        else if(intent.getStringExtra("query_type").equalsIgnoreCase("dismiss")){
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
             int id = intent.getIntExtra("id",-1);
             ToDoDBHelper.deleteItem(id);
         }
-        else if(intent.getStringExtra("query_type").equalsIgnoreCase("SNOOZE")){
+        else if(intent.getStringExtra("query_type").equalsIgnoreCase("snooze")){
+            notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
             ToDoItem toDoItem = intent.getParcelableExtra("item");
             int id = intent.getIntExtra("id",-1);
             Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
@@ -67,13 +75,13 @@ public class ToDoDatabaseService extends Service {
                 e.printStackTrace();
             }
             calendar.setTime(date);
-            calendar.add(Calendar.MINUTE,-2);
+            calendar.add(Calendar.MINUTE,2);
             Intent alarmIntent = new Intent(getBaseContext(), AlarmReceiver.class);
             alarmIntent.putExtra("item", toDoItem);
             alarmIntent.putExtra("type", "alarm");
-            PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getBaseContext(), id, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pendingIntentAlarm = PendingIntent.getBroadcast(getBaseContext(), intent.getIntExtra("hash",-1), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntentAlarm);
-            Log.d(TAG, "Alarm Set");
+            Log.d(TAG, "Alarm Set for "+calendar);
         }
         stopSelf();
         return super.onStartCommand(intent, flags, startId);
