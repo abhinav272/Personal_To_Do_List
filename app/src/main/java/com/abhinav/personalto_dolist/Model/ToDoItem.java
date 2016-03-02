@@ -3,6 +3,8 @@ package com.abhinav.personalto_dolist.Model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+
 /**
  * Created by abhinavsharma on 27-02-2016.
  */
@@ -12,6 +14,42 @@ public class ToDoItem implements Parcelable {
     private String item_time;
     private String item_location;
     private String item_notification;
+
+    public static class List extends ArrayList<ToDoItem>{}
+
+    protected ToDoItem(Parcel in) {
+        item_name = in.readString();
+        item_date = in.readString();
+        item_time = in.readString();
+        item_location = in.readString();
+        item_notification = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(item_name);
+        dest.writeString(item_date);
+        dest.writeString(item_time);
+        dest.writeString(item_location);
+        dest.writeString(item_notification);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<ToDoItem> CREATOR = new Creator<ToDoItem>() {
+        @Override
+        public ToDoItem createFromParcel(Parcel in) {
+            return new ToDoItem(in);
+        }
+
+        @Override
+        public ToDoItem[] newArray(int size) {
+            return new ToDoItem[size];
+        }
+    };
 
     public String getItem_name() {
         return item_name;
@@ -53,38 +91,7 @@ public class ToDoItem implements Parcelable {
         this.item_notification = item_notification;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.item_name);
-        dest.writeString(this.item_date);
-        dest.writeString(this.item_time);
-        dest.writeString(this.item_location);
-        dest.writeString(this.item_notification);
-    }
-
     public ToDoItem() {
     }
 
-    protected ToDoItem(Parcel in) {
-        this.item_name = in.readString();
-        this.item_date = in.readString();
-        this.item_time = in.readString();
-        this.item_location = in.readString();
-        this.item_notification = in.readString();
-    }
-
-    public static final Creator<ToDoItem> CREATOR = new Creator<ToDoItem>() {
-        public ToDoItem createFromParcel(Parcel source) {
-            return new ToDoItem(source);
-        }
-
-        public ToDoItem[] newArray(int size) {
-            return new ToDoItem[size];
-        }
-    };
 }

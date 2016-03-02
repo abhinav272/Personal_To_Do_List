@@ -66,7 +66,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d(TAG,""+set.toString());
                 Profile fbProfile = Profile.getCurrentProfile();
                 Toast.makeText(LoginActivity.this, "Welcome, "+fbProfile.getFirstName(), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                intent.putExtra("profile",fbProfile);
+                intent.putExtra("photoUrl",fbProfile.getProfilePictureUri(800,600));
+                startActivity(intent);
                 finish();
             }
 
@@ -121,7 +124,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
             GoogleSignInAccount googleSignInAccount = result.getSignInAccount();
             Toast.makeText(LoginActivity.this, "Welcome, "+googleSignInAccount.getDisplayName(), Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this,HomeActivity.class));
+            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+            intent.putExtra("photoUrl",googleSignInAccount.getPhotoUrl());
+            startActivity(intent);
             finish();
         }
         else Toast.makeText(LoginActivity.this, "Error in Sign in", Toast.LENGTH_SHORT).show();

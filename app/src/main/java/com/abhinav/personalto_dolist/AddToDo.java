@@ -2,6 +2,7 @@ package com.abhinav.personalto_dolist;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -28,6 +29,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.os.ResultReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.NotificationCompat;
@@ -184,16 +186,16 @@ public class AddToDo extends AppCompatActivity {
             }
         });
 
+
         itemLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(Build.VERSION.SDK_INT>Build.VERSION_CODES.LOLLIPOP){
-                    if(ContextCompat.checkSelfPermission(AddToDo.this,
-                            Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-                        ActivityCompat.requestPermissions(AddToDo.this,new String[]{Manifest.permission.ACCESS_FINE_LOCATION},0);
-                    }
-                    else {
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                    if (ContextCompat.checkSelfPermission(AddToDo.this,
+                            Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(AddToDo.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 0);
+                    } else {
                         if (checkPlayServices()) {
                             mlocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                             if (!mlocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -215,9 +217,9 @@ public class AddToDo extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 int rowId = intent.getIntExtra("rowid", -1);
                 if (rowId != -1) {
-                    Log.d("Broadcast received with",""+rowId);
-                    setUpAlarm(toDoItem,rowId);
-                    setUpNotification(toDoItem,rowId);
+                    Log.d("Broadcast received with", "" + rowId);
+                    setUpAlarm(toDoItem, rowId);
+                    setUpNotification(toDoItem, rowId);
                     finish();
                 }
             }
@@ -228,7 +230,7 @@ public class AddToDo extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode==0){
+        if (requestCode == 0) {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (checkPlayServices()) {
@@ -258,8 +260,7 @@ public class AddToDo extends AppCompatActivity {
         } else if (itemTime.getText().toString().isEmpty()) {
             Snackbar.make(itemName, "Reminder time is mandatory", Snackbar.LENGTH_LONG).show();
             return false;
-        }
-        else if(itemLocation.getText().toString().isEmpty()){
+        } else if (itemLocation.getText().toString().isEmpty()) {
             Snackbar.make(itemName, "Location is mandatory", Snackbar.LENGTH_LONG).show();
             return false;
         }
@@ -419,7 +420,7 @@ public class AddToDo extends AppCompatActivity {
         alarmIntent.putExtra("type", "alarm");
         pendingIntentAlarm = PendingIntent.getBroadcast(AddToDo.this, toDoItem.hashCode(), alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntentAlarm);
-        Log.d(TAG, "Alarm Set for "+date);
+        Log.d(TAG, "Alarm Set for " + date);
 
     }
 
@@ -437,16 +438,16 @@ public class AddToDo extends AppCompatActivity {
         calendar.add(Calendar.MINUTE, -4);
         Intent notifyUser = new Intent(this, AlarmReceiver.class);
         Intent notificationIntent = new Intent(this, HomeActivity.class);
-        Intent dismissIntent = new Intent(AddToDo.this,ToDoDatabaseService.class);
-        Intent snoozeIntent = new Intent(AddToDo.this,ToDoDatabaseService.class);
-        dismissIntent.putExtra("id",id);
-        snoozeIntent.putExtra("id",id);
-        snoozeIntent.putExtra("item",toDoItem);
-        dismissIntent.putExtra("query_type","dismiss");
-        snoozeIntent.putExtra("query_type","snooze");
-        snoozeIntent.putExtra("hash",toDoItem.hashCode());
-        PendingIntent pendingDismiss = PendingIntent.getService(this,1,dismissIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingSnooze = PendingIntent.getService(this,0,snoozeIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+        Intent dismissIntent = new Intent(AddToDo.this, ToDoDatabaseService.class);
+        Intent snoozeIntent = new Intent(AddToDo.this, ToDoDatabaseService.class);
+        dismissIntent.putExtra("id", id);
+        snoozeIntent.putExtra("id", id);
+        snoozeIntent.putExtra("item", toDoItem);
+        dismissIntent.putExtra("query_type", "dismiss");
+        snoozeIntent.putExtra("query_type", "snooze");
+        snoozeIntent.putExtra("hash", toDoItem.hashCode());
+        PendingIntent pendingDismiss = PendingIntent.getService(this, 1, dismissIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingSnooze = PendingIntent.getService(this, 0, snoozeIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         notifyUser.putExtra("type", "notification");
         pendingIntentNotificationActivity = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
@@ -457,15 +458,15 @@ public class AddToDo extends AppCompatActivity {
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setStyle(
                         new android.support.v4.app.NotificationCompat.BigTextStyle()
-                                .bigText(toDoItem.getItem_name()+" at "+toDoItem.getItem_location()));
+                                .bigText(toDoItem.getItem_name() + " at " + toDoItem.getItem_location()));
 
-        NotificationCompat.Action dAction = new android.support.v4.app.NotificationCompat.Action(R.drawable.icon_dismiss,"Dismiss",pendingDismiss);
-        NotificationCompat.Action sAction = new android.support.v4.app.NotificationCompat.Action(R.drawable.icon_snooze,"Snooze",pendingSnooze);
+        NotificationCompat.Action dAction = new android.support.v4.app.NotificationCompat.Action(R.drawable.icon_dismiss, "Dismiss", pendingDismiss);
+        NotificationCompat.Action sAction = new android.support.v4.app.NotificationCompat.Action(R.drawable.icon_snooze, "Snooze", pendingSnooze);
         notificationBuilder.addAction(dAction);
         notificationBuilder.addAction(sAction);
 
         notifyUser.putExtra("Notification", notificationBuilder.build());
-        pendingIntentNotificationBroadcast = PendingIntent.getBroadcast(this, toDoItem.hashCode()+1, notifyUser, PendingIntent.FLAG_UPDATE_CURRENT);
+        pendingIntentNotificationBroadcast = PendingIntent.getBroadcast(this, toDoItem.hashCode() + 1, notifyUser, PendingIntent.FLAG_UPDATE_CURRENT);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntentNotificationBroadcast);
     }
 
