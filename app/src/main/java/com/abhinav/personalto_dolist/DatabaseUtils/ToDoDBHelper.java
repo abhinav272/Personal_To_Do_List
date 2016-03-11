@@ -51,7 +51,7 @@ public class ToDoDBHelper extends SQLiteOpenHelper {
         return mToDoDBHelper;
     }
 
-    public ToDoDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    private ToDoDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         Log.d(TAG, "Database created");
     }

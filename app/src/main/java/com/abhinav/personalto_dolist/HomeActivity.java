@@ -11,8 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.abhinav.personalto_dolist.CustomAdapter.CustomCursorAdapter;
 import com.abhinav.personalto_dolist.CustomAdapter.CustomRVAdapter;
@@ -29,7 +32,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton fab;
     private RecyclerView lview;
     private CustomRVAdapter customRVAdapter;
-    private ToDoItem.List toDoItems = new ToDoItem.List();
+    private ToDoItem.List toDoItems;
     private ToDoDBHelper mToDoDBHelper;
     private Cursor allItems;
     private Uri photoUrl;
@@ -49,7 +52,22 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         customRVAdapter = new CustomRVAdapter(this,toDoItems);
         lview.setAdapter(customRVAdapter);
         lview.setLayoutManager(new LinearLayoutManager(this));
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT|ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                toDoItems.remove(viewHolder.getAdapterPosition());
+                customRVAdapter.notifyDataSetChanged();
+            }
+        };
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(lview);
         super.onStart();
+
     }
 
     private void initialize(){
@@ -74,6 +92,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private ToDoItem.List buildToDoList(Cursor allItems){
+        toDoItems = new ToDoItem.List();
         while(allItems.moveToNext()){
             ToDoItem toDoItem = new ToDoItem();
             toDoItem.setItem_name(allItems.getString(allItems.getColumnIndex(ToDoDBHelper.TableEntries.COL_ITEM_NAME)));
